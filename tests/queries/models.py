@@ -724,3 +724,20 @@ class RelatedIndividual(models.Model):
 class CustomDbColumn(models.Model):
     custom_column = models.IntegerField(db_column='custom_name', null=True)
     ip_address = models.GenericIPAddressField(null=True)
+
+
+## Models to reproduce and fix/or test warning for #23051 and #30124
+
+class WorkSet(models.Model):
+    name = models.TextField(blank=True)
+
+
+class WorkSetExtra(models.Model):
+    description = models.TextField(blank=True)
+    work_set = models.OneToOneField(WorkSet, on_delete=models.CASCADE, related_name='extra')
+
+
+class Work(models.Model):
+    name = models.TextField(blank=True)
+    work_set = models.ForeignKey(WorkSet, on_delete=models.CASCADE, related_name='works')
+    extra_data = models.TextField(blank=True)
